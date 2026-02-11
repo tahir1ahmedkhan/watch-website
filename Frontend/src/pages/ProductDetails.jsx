@@ -1,16 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingCart, FaHeart, FaShare, FaCheck, FaTimes, FaShieldAlt, FaTruck, FaUndo } from "react-icons/fa";
-import watches from "../data/watches";
+import api from "../services/api";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const watch = watches.find(w => w.id === parseInt(id));
+  const [watch, setWatch] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState("overview");
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const response = await api.getProduct(id);
+        if (response.success && response.data) {
+          setWatch(response.data);
+        }
+      } catch (err) {
+        console.error('Error fetching product:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) return <div className="loading-state" style={{ textAlign: 'center', padding: '3rem' }}><p>Loading product...</p></div>;
   if (!watch) return <div className="product-not-found"><h2>Product not found</h2></div>;
 
   const addToCart = () => {

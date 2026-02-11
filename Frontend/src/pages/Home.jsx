@@ -1,9 +1,42 @@
-import watches from "../data/watches";
+import { useState, useEffect } from "react";
+import api from "../services/api";
 import WatchCard from "../components/WatchCard";
 
 export default function Home() {
-  const featuredWatches = watches.slice(0, 3);
-  const allWatches = watches;
+  const [featuredWatches, setFeaturedWatches] = useState([]);
+  const [allWatches, setAllWatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        console.log('Fetching products...'); // Debug log
+        
+        // Fetch featured products
+        const featuredResponse = await api.getFeaturedProducts(3);
+        console.log('Featured Response:', featuredResponse); // Debug log
+        if (featuredResponse.success && featuredResponse.data) {
+          const featured = featuredResponse.data.products || featuredResponse.data;
+          setFeaturedWatches(Array.isArray(featured) ? featured : []);
+        }
+
+        // Fetch all products
+        const allResponse = await api.getProducts();
+        console.log('All Products Response:', allResponse); // Debug log
+        if (allResponse.success && allResponse.data) {
+          const all = allResponse.data.products || allResponse.data;
+          setAllWatches(Array.isArray(all) ? all : []);
+        }
+      } catch (err) {
+        console.error('Error fetching products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <div className="home-page">
@@ -25,11 +58,15 @@ export default function Home() {
       <section className="featured-section">
         <div className="container">
           <h2>Featured Watches</h2>
-          <div className="featured-grid">
-            {featuredWatches.map(watch => (
-              <WatchCard key={watch.id} watch={watch} featured={true} />
-            ))}
-          </div>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>
+          ) : (
+            <div className="featured-grid">
+              {featuredWatches.map(watch => (
+                <WatchCard key={watch.id} watch={watch} featured={true} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -40,11 +77,15 @@ export default function Home() {
             <h2>Our Complete Collection</h2>
             <p>Explore our full range of premium timepieces</p>
           </div>
-          <div className="watches-grid">
-            {allWatches.map(watch => (
-              <WatchCard key={watch.id} watch={watch} />
-            ))}
-          </div>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>
+          ) : (
+            <div className="watches-grid">
+              {allWatches.map(watch => (
+                <WatchCard key={watch.id} watch={watch} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

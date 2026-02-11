@@ -1,15 +1,46 @@
 import { useState, useEffect } from "react";
 import { FaFilter, FaSort, FaTh, FaList } from "react-icons/fa";
-import watches from "../data/watches";
+import api from "../services/api";
 import WatchCard from "../components/WatchCard";
 
 export default function Products() {
-  const [filteredWatches, setFilteredWatches] = useState(watches);
+  const [watches, setWatches] = useState([]);
+  const [filteredWatches, setFilteredWatches] = useState([]);
   const [sortBy, setSortBy] = useState("name");
   const [filterBy, setFilterBy] = useState("all");
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [viewMode, setViewMode] = useState("grid");
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await api.getProducts();
+        console.log('API Response:', response); // Debug log
+        
+        if (response.success && response.data) {
+          // API returns data.products, not just data
+          const productList = response.data.products || response.data;
+          console.log('Products:', productList); // Debug log
+          setWatches(Array.isArray(productList) ? productList : []);
+        } else {
+          setError('No products found. Please add products in the admin dashboard.');
+        }
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError(`Failed to load products: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Filter and sort watches
   useEffect(() => {
@@ -65,7 +96,7 @@ export default function Products() {
     });
 
     setFilteredWatches(filtered);
-  }, [sortBy, filterBy, priceRange, searchTerm]);
+  }, [sortBy, filterBy, priceRange, searchTerm, watches]);
 
   const categories = [
     { value: "all", label: "All Watches" },
@@ -90,17 +121,34 @@ export default function Products() {
           <p>Discover premium timepieces from the world's finest brands</p>
         </div>
 
-        {/* Search Bar */}
-        <div className="search-section">
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Search watches..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        {/* Loading State */}
+        {loading && (
+          <div className="loading-state" style={{ textAlign: 'center', padding: '3rem' }}>
+            <p>Loading products...</p>
           </div>
-        </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="error-state" style={{ textAlign: 'center', padding: '3rem', color: '#e74c3c' }}>
+            <p>{error}</p>
+          </div>
+        )}
+
+        {/* Products Content */}
+        {!loading && !error && (
+          <>
+            {/* Search Bar */}
+            <div className="search-section">
+              <div className="search-bar">
+                <input
+                  type="text"
+                  placeholder="Search watches..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
 
         {/* Filters and Controls */}
         <div className="products-controls">
@@ -174,6 +222,8 @@ export default function Products() {
             </div>
           )}
         </div>
+          </>
+        )}
       </div>
     </div>
   );

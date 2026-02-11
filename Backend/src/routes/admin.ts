@@ -8,9 +8,16 @@ import {
   updateOrderStatus,
   createAdmin
 } from '../controllers/adminController';
+import {
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getAdminProducts
+} from '../controllers/productController';
 import { authenticateAdmin, requireSuperAdmin } from '../middleware/adminAuth';
 import { validateLogin, validateUpdateOrderStatus } from '../middleware/validation';
 import { body } from 'express-validator';
+import { upload } from '../middleware/upload';
 
 const router = Router();
 
@@ -59,5 +66,11 @@ router.patch('/orders/:id/status', authenticateAdmin, validateUpdateOrderStatus,
 
 // Super admin only routes
 router.post('/create-admin', authenticateAdmin, requireSuperAdmin, validateCreateAdmin, createAdmin);
+
+// Product management routes
+router.get('/products', authenticateAdmin, getAdminProducts);
+router.post('/products', authenticateAdmin, upload.single('image'), createProduct);
+router.put('/products/:id', authenticateAdmin, upload.single('image'), updateProduct);
+router.delete('/products/:id', authenticateAdmin, deleteProduct);
 
 export default router;
