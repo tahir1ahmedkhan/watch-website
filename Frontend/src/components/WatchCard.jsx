@@ -10,7 +10,8 @@ export default function WatchCard({ watch, featured = false }) {
     e.stopPropagation();
     
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingItem = cart.find(item => item.id === watch.id);
+    const productId = watch._id || watch.id;
+    const existingItem = cart.find(item => (item._id || item.id) === productId);
     
     if (existingItem) {
       existingItem.quantity = (existingItem.quantity || 1) + 1;
@@ -42,7 +43,7 @@ export default function WatchCard({ watch, featured = false }) {
 
   return (
     <div className={`watch-card ${featured ? 'featured' : ''}`}>
-      <Link to={`/product/${watch.id}`} className="card-link">
+      <Link to={`/product/${watch._id || watch.id}`} className="card-link">
         <div className="image-container">
           {!imageLoaded && !imageError && (
             <div className="image-placeholder">
@@ -79,7 +80,7 @@ export default function WatchCard({ watch, featured = false }) {
       </Link>
       
       <div className="card-actions">
-        <Link to={`/product/${watch.id}`} className="btn btn-primary">
+        <Link to={`/product/${watch._id || watch.id}`} className="btn btn-primary">
           View Details
         </Link>
         <button className="btn btn-secondary" onClick={addToCart}>

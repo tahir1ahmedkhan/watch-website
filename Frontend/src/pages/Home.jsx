@@ -63,7 +63,7 @@ export default function Home() {
           ) : (
             <div className="featured-grid">
               {featuredWatches.map(watch => (
-                <WatchCard key={watch.id} watch={watch} featured={true} />
+                <WatchCard key={watch._id || watch.id} watch={watch} featured={true} />
               ))}
             </div>
           )}
@@ -82,7 +82,7 @@ export default function Home() {
           ) : (
             <div className="watches-grid">
               {allWatches.map(watch => (
-                <WatchCard key={watch.id} watch={watch} />
+                <WatchCard key={watch._id || watch.id} watch={watch} />
               ))}
             </div>
           )}

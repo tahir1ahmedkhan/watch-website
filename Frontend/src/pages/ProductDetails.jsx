@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingCart, FaHeart, FaShare, FaCheck, FaTimes, FaShieldAlt, FaTruck, FaUndo } from "react-icons/fa";
 import api from "../services/api";
+import WatchCard from "../components/WatchCard";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [watch, setWatch] = useState(null);
+  const [relatedWatches, setRelatedWatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState("overview");
   const [quantity, setQuantity] = useState(1);
@@ -16,9 +18,24 @@ export default function ProductDetails() {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        console.log('Fetching product with ID:', id); // Debug log
         const response = await api.getProduct(id);
+        console.log('Product Response:', response); // Debug log
         if (response.success && response.data) {
           setWatch(response.data);
+          
+          // Fetch related products
+          const allProductsResponse = await api.getProducts();
+          if (allProductsResponse.success && allProductsResponse.data) {
+            const allProducts = allProductsResponse.data.products || allProductsResponse.data;
+            const related = allProducts.filter(p => 
+              p._id !== response.data._id && 
+              (p.brand === response.data.brand || p.category === response.data.category)
+            ).slice(0, 4);
+            setRelatedWatches(related);
+          }
+        } else {
+          console.error('Product not found in response');
         }
       } catch (err) {
         console.error('Error fetching product:', err);
@@ -79,11 +96,6 @@ export default function ProductDetails() {
     
     return stars;
   };
-
-  const relatedWatches = watches.filter(w => 
-    w.id !== watch.id && 
-    (w.brand === watch.brand || w.category === watch.category)
-  ).slice(0, 4);
 
   return (
     <div className="product-details-page">
@@ -392,7 +404,7 @@ export default function ProductDetails() {
             <h3>Related Products</h3>
             <div className="related-grid">
               {relatedWatches.map(relatedWatch => (
-                <div key={relatedWatch.id} className="related-item" onClick={() => navigate(`/product/${relatedWatch.id}`)}>
+                <div key={relatedWatch._id} className="related-item" onClick={() => navigate(`/product/${relatedWatch._id}`)}>
                   <img src={relatedWatch.image} alt={relatedWatch.name} />
                   <h4>{relatedWatch.name}</h4>
                   <p className="related-price">${relatedWatch.price}</p>

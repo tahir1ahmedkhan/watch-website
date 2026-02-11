@@ -213,7 +213,7 @@ export default function Products() {
         <div className={`products-container ${viewMode}`}>
           {filteredWatches.length > 0 ? (
             filteredWatches.map(watch => (
-              <WatchCard key={watch.id} watch={watch} />
+              <WatchCard key={watch._id || watch.id} watch={watch} />
             ))
           ) : (
             <div className="no-results">
