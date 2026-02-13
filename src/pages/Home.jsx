@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import WatchCard from "../components/WatchCard";
+import mockWatches from "../data/watches";
 
 export default function Home() {
   const [featuredWatches, setFeaturedWatches] = useState([]);
@@ -19,6 +20,9 @@ export default function Home() {
         if (featuredResponse.success && featuredResponse.data) {
           const featured = featuredResponse.data.products || featuredResponse.data;
           setFeaturedWatches(Array.isArray(featured) ? featured : []);
+        } else {
+          // Fallback to mock data
+          setFeaturedWatches(mockWatches.slice(0, 3));
         }
 
         // Fetch all products
@@ -27,9 +31,15 @@ export default function Home() {
         if (allResponse.success && allResponse.data) {
           const all = allResponse.data.products || allResponse.data;
           setAllWatches(Array.isArray(all) ? all : []);
+        } else {
+          // Fallback to mock data
+          setAllWatches(mockWatches);
         }
       } catch (err) {
-        console.error('Error fetching products:', err);
+        console.error('Error fetching products, using mock data:', err);
+        // Fallback to mock data on error
+        setFeaturedWatches(mockWatches.slice(0, 3));
+        setAllWatches(mockWatches);
       } finally {
         setLoading(false);
       }
