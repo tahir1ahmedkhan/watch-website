@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingCart, FaHeart, FaShare, FaCheck, FaTimes, FaShieldAlt, FaTruck, FaUndo } from "react-icons/fa";
 import api from "../services/api";
-import WatchCard from "../components/WatchCard";
 
 export default function ProductDetails() {
   const { id } = useParams();

@@ -14,6 +14,7 @@ export default function Orders() {
     if (isAuthenticated) {
       fetchOrders();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, selectedStatus]);
 
   const fetchOrders = async () => {
