@@ -10,7 +10,14 @@
     "build:all": "npm run build:backend && npm run build:frontend",
     "dev:backend": "cd Backend && npm run dev",
     "dev:frontend": "cd Frontend && npm start",
-    "vercel-build": "cd Frontend && npm install && npm run build"
+    "vercel-build": "cd Frontend && npm install && npm run build",
+    "lint:backend": "cd Backend && npm run lint",
+    "lint:frontend": "cd Frontend && npm run lint",
+    "lint:all": "npm run lint:backend && npm run lint:frontend",
+    "check:backend": "cd Backend && npm run build:check",
+    "check:frontend": "cd Frontend && npm run build:strict",
+    "check:all": "npm run check:backend && npm run check:frontend",
+    "test:build": "npm run lint:all && npm run build:all"
   },
   "keywords": ["ecommerce", "watch-store", "react", "express"],
   "author": "",

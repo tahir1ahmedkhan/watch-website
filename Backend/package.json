@@ -7,13 +7,16 @@
     "start": "node dist/server.js",
     "dev": "nodemon",
     "build": "tsc",
+    "build:check": "tsc --noEmit",
     "build-and-start": "npm run build && npm start",
     "build-check": "node build-and-start.js",
     "test": "jest",
     "seed": "ts-node src/scripts/seedDatabase.ts",
     "setup": "node setup.js",
     "clean": "rimraf dist",
-    "restart": "npm run build && npm run dev"
+    "restart": "npm run build && npm run dev",
+    "lint": "tsc --noEmit",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [
     "typescript",
