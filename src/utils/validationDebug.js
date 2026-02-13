@@ -179,7 +179,7 @@ export const validationDebug = {
 
     // Phone validation (optional)
     if (formData.phone && formData.phone.trim().length > 0) {
-      const phoneRegex = /^[\+]?[1-9][\d]{9,14}$/;
+      const phoneRegex = /^[+]?[1-9][\d]{9,14}$/;
       const cleanPhone = formData.phone.replace(/[^\d+]/g, '');
       if (!phoneRegex.test(cleanPhone)) {
         errors.push('Phone number must be 10-15 digits, optionally starting with +');
