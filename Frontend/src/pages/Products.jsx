@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaFilter, FaSort, FaTh, FaList } from "react-icons/fa";
 import api from "../services/api";
 import WatchCard from "../components/WatchCard";
+import mockWatches from "../data/watches";
 
 export default function Products() {
   const [watches, setWatches] = useState([]);
@@ -13,6 +14,7 @@ export default function Products() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [usingMockData, setUsingMockData] = useState(false);
 
   // Fetch products from API
   useEffect(() => {
@@ -28,12 +30,16 @@ export default function Products() {
           const productList = response.data.products || response.data;
           console.log('Products:', productList); // Debug log
           setWatches(Array.isArray(productList) ? productList : []);
+          setUsingMockData(false);
         } else {
-          setError('No products found. Please add products in the admin dashboard.');
+          console.warn('No products from API, using mock data');
+          setWatches(mockWatches);
+          setUsingMockData(true);
         }
       } catch (err) {
-        console.error('Error fetching products:', err);
-        setError(`Failed to load products: ${err.message}`);
+        console.error('Error fetching products, using mock data:', err);
+        setWatches(mockWatches);
+        setUsingMockData(true);
       } finally {
         setLoading(false);
       }
@@ -119,6 +125,17 @@ export default function Products() {
         <div className="products-header">
           <h1>Our Watch Collection</h1>
           <p>Discover premium timepieces from the world's finest brands</p>
+          {usingMockData && (
+            <div style={{ 
+              background: '#fff3cd', 
+              padding: '10px', 
+              borderRadius: '5px', 
+              marginTop: '10px',
+              color: '#856404'
+            }}>
+              ⚠️ Demo Mode: Showing sample products. Deploy backend to see real data.
+            </div>
+          )}
         </div>
 
         {/* Loading State */}
@@ -129,14 +146,14 @@ export default function Products() {
         )}
 
         {/* Error State */}
-        {error && (
+        {error && !usingMockData && (
           <div className="error-state" style={{ textAlign: 'center', padding: '3rem', color: '#e74c3c' }}>
             <p>{error}</p>
           </div>
         )}
 
         {/* Products Content */}
-        {!loading && !error && (
+        {!loading && (
           <>
             {/* Search Bar */}
             <div className="search-section">
