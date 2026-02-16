@@ -9,7 +9,12 @@ const seedAdmin = async () => {
     // Check if admin already exists
     const existingAdmin = await Admin.findOne({ email: 'admin@watchstore.com' });
     if (existingAdmin) {
-      console.log('Admin already exists');
+      console.log('✅ Super admin already exists!');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('Email: admin@watchstore.com');
+      console.log('Password: admin123456');
+      console.log('Role:', existingAdmin.role);
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       process.exit(0);
     }
 
@@ -23,14 +28,16 @@ const seedAdmin = async () => {
     });
 
     await admin.save();
-    console.log('Super admin created successfully!');
+    console.log('✅ Super admin created successfully!');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('Email: admin@watchstore.com');
     console.log('Password: admin123456');
     console.log('Role: super-admin');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     
     process.exit(0);
   } catch (error) {
-    console.error('Error seeding admin:', error);
+    console.error('❌ Error seeding admin:', error);
     process.exit(1);
   }
 };

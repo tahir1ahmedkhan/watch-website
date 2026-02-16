@@ -12,6 +12,7 @@
     "build-check": "node build-and-start.js",
     "test": "jest",
     "seed": "ts-node src/scripts/seedDatabase.ts",
+    "seed:admin": "ts-node src/scripts/seedAdmin.ts",
     "setup": "node setup.js",
     "clean": "rimraf dist",
     "restart": "npm run build && npm run dev",
