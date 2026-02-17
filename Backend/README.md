@@ -46,6 +46,19 @@ A comprehensive TypeScript backend for the watch store application with user aut
 - `GET /api/orders` - Get all orders (admin)
 - `PATCH /api/orders/:id/status` - Update order status (admin)
 
+### Admin
+- `POST /api/admin/login` - Admin login
+- `GET /api/admin/profile` - Get admin profile (protected)
+- `GET /api/admin/dashboard/stats` - Get dashboard statistics (protected)
+- `GET /api/admin/users` - Get all users (protected)
+- `GET /api/admin/orders` - Get all orders (protected)
+- `PATCH /api/admin/orders/:id/status` - Update order status (protected)
+- `POST /api/admin/create-admin` - Create new admin (super-admin only)
+- `GET /api/admin/products` - Get all products for admin (protected)
+- `POST /api/admin/products` - Create product (protected)
+- `PUT /api/admin/products/:id` - Update product (protected)
+- `DELETE /api/admin/products/:id` - Delete product (protected)
+
 ### Health Check
 - `GET /api/health` - API health check
 
@@ -70,26 +83,53 @@ A comprehensive TypeScript backend for the watch store application with user aut
    ```env
    PORT=5000
    NODE_ENV=development
-   MONGODB_URI=mongodb://localhost:27017/watch-store
+   
+   # MongoDB Atlas Connection
+   MONGODB_URI=mongodb+srv://tahirahmedkhan7_db_user:Q0VYXM3wwxoIrRdt@cluster0.ddxdp4q.mongodb.net/watch-store
+   
+   # Default Admin Credentials
+   ADMIN_EMAIL=admin@watchstore.com
+   ADMIN_PASSWORD=admin123
+   
    JWT_SECRET=your-super-secret-jwt-key-here
    JWT_EXPIRES_IN=7d
    FRONTEND_URL=http://localhost:3000
    ```
 
-4. **Start MongoDB**
-   Make sure MongoDB is running on your system.
-
-5. **Seed the database** (optional)
+4. **Seed the database** (optional but recommended)
    ```bash
    npm run seed
+   # Or seed everything including admin, users, products, and orders:
+   npx ts-node src/scripts/seedAll.ts
    ```
 
-6. **Start the development server**
+5. **Start the development server**
    ```bash
    npm run dev
    ```
 
 The server will start on `http://localhost:5000`
+
+## Default Admin Credentials
+
+After seeding the database, you can login to the admin dashboard with:
+
+```
+Email: admin@watchstore.com
+Password: admin123
+```
+
+**Important**: Change the default password after first login in production!
+
+## MongoDB Atlas Connection
+
+This project is configured to use MongoDB Atlas (cloud database):
+
+- **Connection String**: See `.env` file
+- **Database Name**: watch-store
+- **Collections**: admins, users, products, orders
+
+For detailed MongoDB setup instructions, see `MONGODB_ATLAS_SETUP.md`
 
 ## Scripts
 

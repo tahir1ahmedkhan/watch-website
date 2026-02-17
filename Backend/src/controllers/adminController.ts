@@ -13,19 +13,40 @@ interface AuthRequest extends Request {
 export const adminLogin = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
+    console.log('=== Admin Login Debug ===');
+    console.log('Request body:', req.body);
+    console.log('Email:', email);
+    console.log('Email type:', typeof email);
+    console.log('Email toLowerCase:', email?.toLowerCase());
+    console.log('Password length:', password?.length);
 
-    // Find admin by email
-    const admin = await Admin.findOne({ email, isActive: true });
+    // Try to find admin with different queries
+    const admin1 = await Admin.findOne({ email: email });
+    console.log('Query with original email:', admin1 ? 'Found' : 'Not found');
+    
+    const admin2 = await Admin.findOne({ email: email?.toLowerCase() });
+    console.log('Query with lowercase email:', admin2 ? 'Found' : 'Not found');
+    
+    const admin3 = await Admin.findOne({ email: email, isActive: true });
+    console.log('Query with isActive:', admin3 ? 'Found' : 'Not found');
+    
+    // Use the admin that was found
+    const admin = admin1 || admin2 || admin3;
+    
     if (!admin) {
+      console.log('❌ No admin found');
       res.status(401).json({
         success: false,
         message: 'Invalid credentials'
       });
       return;
     }
+    
+    console.log('✅ Admin found:', admin.email);
 
     // Check password
     const isPasswordValid = await admin.comparePassword(password);
+    console.log('Password valid:', isPasswordValid);
     if (!isPasswordValid) {
       res.status(401).json({
         success: false,

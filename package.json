@@ -5,6 +5,8 @@
   "description": "Watch Store E-commerce Platform",
   "scripts": {
     "install:all": "cd Backend && npm install && cd ../Frontend && npm install",
+    "build": "cd Backend && npm install && npm run build",
+    "start": "cd Backend && npm start",
     "build:backend": "cd Backend && npm run build",
     "build:frontend": "cd Frontend && npm run build",
     "build:all": "npm run build:backend && npm run build:frontend",

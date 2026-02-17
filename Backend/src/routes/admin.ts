@@ -15,7 +15,7 @@ import {
   getAdminProducts
 } from '../controllers/productController';
 import { authenticateAdmin, requireSuperAdmin } from '../middleware/adminAuth';
-import { validateLogin, validateUpdateOrderStatus } from '../middleware/validation';
+import { validateLogin, validateUpdateOrderStatus, handleValidationErrors } from '../middleware/validation';
 import { body } from 'express-validator';
 import { upload } from '../middleware/upload';
 
@@ -25,7 +25,6 @@ const router = Router();
 const validateAdminLogin = [
   body('email')
     .isEmail()
-    .normalizeEmail()
     .withMessage('Please provide a valid email'),
   body('password')
     .notEmpty()

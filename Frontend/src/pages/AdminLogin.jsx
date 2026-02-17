@@ -134,7 +134,7 @@ export default function AdminLogin() {
         <div className="admin-login-footer">
           <p>Default Admin Credentials:</p>
           <p><strong>Email:</strong> admin@watchstore.com</p>
-          <p><strong>Password:</strong> admin123456</p>
+          <p><strong>Password:</strong> admin123</p>
         </div>
       </div>
     </div>
