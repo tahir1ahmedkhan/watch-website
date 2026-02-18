@@ -125,17 +125,6 @@ export default function Products() {
         <div className="products-header">
           <h1>Our Watch Collection</h1>
           <p>Discover premium timepieces from the world's finest brands</p>
-          {usingMockData && (
-            <div style={{ 
-              background: '#fff3cd', 
-              padding: '10px', 
-              borderRadius: '5px', 
-              marginTop: '10px',
-              color: '#856404'
-            }}>
-              ⚠️ Demo Mode: Showing sample products. Deploy backend to see real data.
-            </div>
-          )}
         </div>
 
         {/* Loading State */}
